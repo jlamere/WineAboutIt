@@ -1,18 +1,18 @@
+# Jen Lamere
+# 11/25/2016
+
 import requests, csv
 from api_key import key
 from attributes import attributes
 
-
+# building url
 base_url = "http://services.wine.com/api/beta2/service.svc/json/"
 url = base_url + "categorymap?filter=categories(490)&apikey=" + key
-print url
 
 resp = requests.get(url)
-if resp.status_code != 200:
-    raise ApiError('GET /catalog/ {}'.format(resp.status_code))
-
 jsonResponse = resp.json()
 
+# find all attributes stored on wine
 for header in jsonResponse['Categories']:
     if header['Name'] in attributes:
         file = open(header['Name'] + ".csv", 'wb')

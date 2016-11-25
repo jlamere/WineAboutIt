@@ -1,10 +1,12 @@
+# Jen Lamere
+# 11/25/2016
 import csv
 import ast
 import operator
 
 
 datafile = "./prototypes.csv"
-
+# Read in attributes, and print out data better formatted
 with open(datafile, 'rb') as f:
     reader = csv.reader(f)
     raw_data = list(reader)

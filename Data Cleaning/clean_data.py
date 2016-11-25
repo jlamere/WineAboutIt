@@ -20,15 +20,21 @@ def clean_wine(one_wine):
     if (one_wine["Varietal"] == None) or (one_wine["Type"] != "Wine") or (one_wine["ProductAttributes"] == None):
         return
 
+    # wine attributes
     wine_clean = {}
     wine_clean["Attibutes"] = [r["Name"] for r in one_wine["ProductAttributes"] if r["Id"] in xrange(610, 617)]
     wine_clean['Name'] = one_wine['Name']
     wine_clean['Type'] = one_wine["Varietal"]["Name"]
     wine_clean['WineType'] = one_wine["Varietal"]["WineType"]["Name"]
-    exists = one_wine["Varietal"]["Name"] in wine_type
-    wine_type[one_wine["Varietal"]["Name"]] = wine_type[one_wine["Varietal"]["Name"]] + 1 if exists else 1
+
+    # write to file
     clean_data_file.writerow([wine_clean])
 
+    # tracking how many types of each wine variety
+    exists = one_wine["Varietal"]["Name"] in wine_type
+    wine_type[one_wine["Varietal"]["Name"]] = wine_type[one_wine["Varietal"]["Name"]] + 1 if exists else 1
+
+# read in data
 datafile = "raw_data.csv"
 with open(datafile, 'rb') as f:
     reader = csv.reader(f)
@@ -37,6 +43,6 @@ with open(datafile, 'rb') as f:
         for j in i:
             clean_wine(ast.literal_eval(j))
 
-
+# write out wine variety info
 for key, val in wine_type.items():
     wine_type_file.writerow([key.encode('utf-8'), val])
