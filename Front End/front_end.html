@@ -8,6 +8,7 @@
     <style type="text/css">
     .masthead   {
         height: 30%;
+        background-color: #502127 !important;
     }
     
     </style>
@@ -17,7 +18,7 @@
 
 
 <div class="pusher">
-  <div class="ui teal inverted vertical masthead center aligned segment">
+  <div class="ui inverted vertical masthead center aligned segment">
     <div class="ui text container">
     <h1 class = "ui inverted header"> <i class="circular cocktail icon"></i></h1>
       <h1 class="ui inverted header">Wine.About.It </h1>
@@ -106,6 +107,10 @@
 
          }
     });
+    start_wine = "Riesling";
+            final_wine = "Pinot Gris/Grigio";
+            initial_wine = "Riesling"
+            d(start_wine, 0);
     $('#button').click(function(){
         if(!final_wine){
             $("#newWine").addClass('error');
@@ -116,6 +121,11 @@
         else if (initial_wine && final_wine){
             $("#favWine").removeClass('error');
             $("#newWine").removeClass('error');
+            $("#button").addClass('loading');
+            start_wine = "Riesling";
+            final_wine = "Pinot Gris/Grigio";
+            initial_wine = "Riesling"
+            d(start_wine, 0);
 
         }
     })
@@ -138,7 +148,9 @@
                     $( ".wine_list" ).prepend(build_header(w));
                     w = completed[w]
 
-                }            
+                }
+                $( ".wine_list" ).prepend(build_header(w));
+                $("#button").removeClass('loading');            
                 return
             }
             if(completed[node] != null) continue
@@ -164,7 +176,7 @@
             }
 
         }
-        if(min_node["weight"] == 100 || j > 10){
+        if(min_node["weight"] == 100 || j > 20){
             console.log("no path " + j)
             return
         }
@@ -175,7 +187,7 @@
     }
 
     function build_header(wine_name){
-      return '<h2 class="ui center aligned icon header"><i class="circular cocktail icon"></i>' + wine_name + '</h2>'
+      return '<h2 class="ui center aligned icon header">' + wine_name + '</h2>'
       
     }
 </script>
