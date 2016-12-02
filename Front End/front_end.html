@@ -1,0 +1,151 @@
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Wine About It</title>
+  <meta name="author" content="Jen Lamere">
+
+    <style type="text/css">
+    .masthead   {
+        height: 30%;
+    }
+    
+    </style>
+</head>
+
+<body>
+
+
+<div class="pusher">
+  <div class="ui teal inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+    <h1 class = "ui inverted header"> <i class="circular cocktail icon"></i></h1>
+      <h1 class="ui inverted header">Wine.About.It </h1>
+      <h3>Get yourself to drink better wine</h3>
+    </div>
+
+  </div>
+
+
+  <div class="ui vertical stripe segment">
+    <div class="ui middle aligned stackable grid container">
+      <div class="row">
+        <div class="six wide right floated column">
+        <div class="ui floating dropdown labeled search icon button center" id="favWine">
+             <i class="heart icon"></i>
+        <span class="text">Select your favorite wine</span>
+        </div>
+        </div>
+        <div class="six wide right floated column">
+            <div class="ui floating dropdown labeled search icon button center" id="newWine">
+              <i class="empty heart icon"></i>
+              <span class="text">Wine you want to like </span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class = "wine_list"></div>
+<script src="./graphlib.min.js"></script>
+<script src="./jquery-3.1.1.min.js"></script>
+<script src="./similarity.js"></script>
+<link rel="stylesheet" type="text/css" href="./semantic.min.css">
+<script src="./semantic.min.js"></script>
+<script>
+
+    wine = {}
+    wine_names = []
+    dijkstra = {}
+    completed = {}
+    var g = new graphlib.Graph();
+    for (var row in data){
+        wine_sim = data[row].split(',')
+        if(wine[wine_sim[0]] == null){
+            wine[wine_sim[0]] = {}
+            wine_names.push(wine_sim[0])
+        }
+      if(wine[wine_sim[1]] == null){
+            wine[wine_sim[1]] = {}
+        }
+        wine[wine_sim[0]][wine_sim[1]] = 1-wine_sim[2]
+        wine[wine_sim[1]][wine_sim[0]] = 1-wine_sim[2]
+        g.setEdge(wine_sim[0], wine_sim[1], 1-wine_sim[2])
+        g.setEdge(wine_sim[1], wine_sim[0], 1-wine_sim[2])
+
+    }
+
+    $('.ui.dropdown').dropdown();
+    dropdownHTML = ""
+    for(w in wine_names){
+        dropdownHTML += '<div class="item" data-value="' + wine_names[w] + '">' + wine_names[w] + '</div>'
+    }
+    $('#favWine .menu').html(dropdownHTML);
+    $('#favWine').dropdown();
+    $('#newWine .menu').html(dropdownHTML);
+    $('#newWine').dropdown();
+
+    initial_wine = "Riesling"
+    start_wine = initial_wine
+    final_wine =  "Merlot"
+    d(start_wine, 0)
+    
+
+
+    function d(start_wine, j){
+        edges = g.outEdges(start_wine)
+        for(var i in edges){
+            node = edges[i]['w']
+            weight = wine[start_wine][node]
+
+            // backtrack to final wine
+            if(node == final_wine){
+                $( ".wine_list" ).prepend(build_header(final_wine));
+                w = start_wine
+                while(w != initial_wine){
+                    w = completed[w]
+                    $( ".wine_list" ).prepend(build_header(w));
+                }            
+                return
+            }
+            if(completed[node] != null) continue
+            else if(dijkstra[node] == null){
+                dijkstra[node] = {
+                    "parent":start_wine,
+                    "weight": weight
+                }
+            }
+            else if (weight < dijkstra[node][weight]){
+                dijkstra[node]['parent'] = start_wine
+                dijkstra[node]["weight"] = weight
+            }
+        }
+
+        var min_node = {
+            "weight" : 100
+        }
+        for(var i in dijkstra){
+            if(dijkstra[i]["weight"] < min_node["weight"]){
+                min_node = dijkstra[i]
+                min_node["name"] = i
+            }
+
+        }
+        if(min_node["weight"] == 100 || j > 50){
+            console.log("no path " + j)
+            return
+        }
+
+        completed[min_node["name"]] = min_node["parent"]
+        delete dijkstra[min_node["name"]]
+        d(min_node["name"], j + 1)
+    }
+
+    function build_header(wine_name){
+      return '<h2 class="ui center aligned icon header"><i class="circular cocktail icon"></i>' + wine_name + '</h2>'
+      
+    }
+</script>
+</body>
+</html>
