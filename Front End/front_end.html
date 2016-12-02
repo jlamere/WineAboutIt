@@ -15,45 +15,44 @@
 </head>
 
 <body>
-
-
-<div class="pusher">
-  <div class="ui inverted vertical masthead center aligned segment">
-    <div class="ui text container">
-    <h1 class = "ui inverted header"> <i class="circular cocktail icon"></i></h1>
-      <h1 class="ui inverted header">Wine.About.It </h1>
-      <h3>Get yourself to drink better wine</h3>
-    </div>
-
-  </div>
-</div>
-
-<div class="ui two column centered grid " id = "selector">
-<div class = "row"></div>
-  <div class="four column centered row">
-    <div class="column">
-        
-      <div class="ui floating dropdown labeled search icon button center" id="favWine">
-             <i class="heart icon"></i>
-        <span class="text">Select your favorite wine</span>
-        </div>
-
-    </div>
-    <div class="column">
-        <div class="ui floating dropdown labeled search icon button center" id="newWine">
-              <i class="empty heart icon"></i>
-              <span class="text">Wine you want to like </span>
+    <div class="pusher">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui text container">
+                <h1 class = "ui inverted header"> <i class="circular cocktail icon"></i></h1>
+                <h1 class="ui inverted header">Wine.About.It </h1>
+                <h3>Get yourself to drink better wine</h3>
             </div>
+        </div>
     </div>
-  </div>
-  </div>
-  <div class="ui six column centered grid">
 
-      <div class="column">        
+    <div class="ui two column centered grid " id = "selector">
+        <div class = "row"></div>
+        <div class="seven column centered row">
+            <div class="column">
+                <div class="ui floating dropdown labeled search icon button center" id="favWine">
+                    <i class="heart icon"></i>
+                    <span class="text">Select your favorite wine</span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui floating dropdown labeled search icon button center" id="newWine">
+                    <i class="empty heart icon"></i>
+                    <span class="text">Wine you want to like </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui one column stackable center aligned page grid">
+        <div class="column twelve wide">
             <button class="ui secondary basic button" id = "button">Find my wine!</button>
         </div>
-</div>
-<div class = "wine_list"></div>
+    </div>
+    <div class="ui one column stackable center aligned page grid">
+        <div class="column twelve wide">
+            <div class = "wine_list"></div>
+        </div>
+    </div>
+
 <script src="./graphlib.min.js"></script>
 <script src="./jquery-3.1.1.min.js"></script>
 <script src="./similarity.js"></script>
@@ -65,6 +64,8 @@
     wine_names = []
     dijkstra = {}
     completed = {}
+
+    // populate data
     var g = new graphlib.Graph();
     for (var row in data){
         wine_sim = data[row].split(',')
@@ -72,7 +73,7 @@
             wine[wine_sim[0]] = {}
             wine_names.push(wine_sim[0])
         }
-      if(wine[wine_sim[1]] == null){
+        if(wine[wine_sim[1]] == null){
             wine[wine_sim[1]] = {}
             wine_names.push(wine_sim[1])
         }
@@ -107,10 +108,12 @@
 
          }
     });
+
     start_wine = "Riesling";
-            final_wine = "Pinot Gris/Grigio";
-            initial_wine = "Riesling"
-            d(start_wine, 0);
+    final_wine = "Pinot Gris/Grigio";
+    initial_wine = "Riesling"
+    d(start_wine, 0);
+
     $('#button').click(function(){
         if(!final_wine){
             $("#newWine").addClass('error');
@@ -131,29 +134,35 @@
     })
 
     
-
-
     function d(start_wine, j){
+        $(".wine_list").empty()
         console.log(start_wine + " " + final_wine + " " + j);
         edges = g.outEdges(start_wine)
         for(var i in edges){
             node = edges[i]['w']
             weight = wine[start_wine][node]
+            if(completed[node] != null) continue
 
             // backtrack to final wine
             if(node == final_wine){
-                $( ".wine_list" ).prepend(build_header(final_wine));
+                wine_html = [];
                 w = start_wine
+                wine_html.push(final_wine);
                 while(w != initial_wine){
-                    $( ".wine_list" ).prepend(build_header(w));
+                    wine_html.push(w);
                     w = completed[w]
 
                 }
-                $( ".wine_list" ).prepend(build_header(w));
+                wine_html.push(w)
+                wine_html.reverse();
+                var html = "";
+                for(html_item in wine_html){
+                    html += build_header(wine_html[html_item]);
+                }
+                $( ".wine_list" ).prepend('<div class="ui steps">' + html);
                 $("#button").removeClass('loading');            
                 return
             }
-            if(completed[node] != null) continue
             else if(dijkstra[node] == null){
                 dijkstra[node] = {
                     "parent":start_wine,
@@ -187,7 +196,7 @@
     }
 
     function build_header(wine_name){
-      return '<h2 class="ui center aligned icon header">' + wine_name + '</h2>'
+      return '<div class="step"><i class="cocktail icon"></i><div class="content"><div class="title">' + wine_name + '</div><div class="description">Wine details here</div></div></div>'
       
     }
 </script>
