@@ -25,28 +25,33 @@
     </div>
 
   </div>
+</div>
 
-
-  <div class="ui vertical stripe segment">
-    <div class="ui middle aligned stackable grid container">
-      <div class="row">
-        <div class="six wide right floated column">
-        <div class="ui floating dropdown labeled search icon button center" id="favWine">
+<div class="ui two column centered grid " id = "selector">
+<div class = "row"></div>
+  <div class="four column centered row">
+    <div class="column">
+        
+      <div class="ui floating dropdown labeled search icon button center" id="favWine">
              <i class="heart icon"></i>
         <span class="text">Select your favorite wine</span>
         </div>
-        </div>
-        <div class="six wide right floated column">
-            <div class="ui floating dropdown labeled search icon button center" id="newWine">
+
+    </div>
+    <div class="column">
+        <div class="ui floating dropdown labeled search icon button center" id="newWine">
               <i class="empty heart icon"></i>
               <span class="text">Wine you want to like </span>
             </div>
-        </div>
-      </div>
     </div>
   </div>
+  </div>
+  <div class="ui six column centered grid">
 
-
+      <div class="column">        
+            <button class="ui secondary basic button" id = "button">Find my wine!</button>
+        </div>
+</div>
 <div class = "wine_list"></div>
 <script src="./graphlib.min.js"></script>
 <script src="./jquery-3.1.1.min.js"></script>
@@ -68,6 +73,7 @@
         }
       if(wine[wine_sim[1]] == null){
             wine[wine_sim[1]] = {}
+            wine_names.push(wine_sim[1])
         }
         wine[wine_sim[0]][wine_sim[1]] = 1-wine_sim[2]
         wine[wine_sim[1]][wine_sim[0]] = 1-wine_sim[2]
@@ -81,19 +87,44 @@
     for(w in wine_names){
         dropdownHTML += '<div class="item" data-value="' + wine_names[w] + '">' + wine_names[w] + '</div>'
     }
-    $('#favWine .menu').html(dropdownHTML);
-    $('#favWine').dropdown();
-    $('#newWine .menu').html(dropdownHTML);
-    $('#newWine').dropdown();
 
-    initial_wine = "Riesling"
-    start_wine = initial_wine
-    final_wine =  "Merlot"
-    d(start_wine, 0)
+    initial_wine = null
+    start_wine = null
+    final_wine =  null
+
+    $('#favWine .menu').html(dropdownHTML);
+    $('#favWine').dropdown({
+         onChange: function(val) {
+            initial_wine= val
+            start_wine = val
+         }
+    });
+    $('#newWine .menu').html(dropdownHTML);
+    $('#newWine').dropdown({
+         onChange: function(val) {
+            final_wine = val
+
+         }
+    });
+    $('#button').click(function(){
+        if(!final_wine){
+            $("#newWine").addClass('error');
+        }
+        if(!initial_wine){
+            $("#favWine").addClass('error');
+        }
+        else if (initial_wine && final_wine){
+            $("#favWine").removeClass('error');
+            $("#newWine").removeClass('error');
+
+        }
+    })
+
     
 
 
     function d(start_wine, j){
+        console.log(start_wine + " " + final_wine + " " + j);
         edges = g.outEdges(start_wine)
         for(var i in edges){
             node = edges[i]['w']
@@ -104,8 +135,9 @@
                 $( ".wine_list" ).prepend(build_header(final_wine));
                 w = start_wine
                 while(w != initial_wine){
-                    w = completed[w]
                     $( ".wine_list" ).prepend(build_header(w));
+                    w = completed[w]
+
                 }            
                 return
             }
@@ -132,7 +164,7 @@
             }
 
         }
-        if(min_node["weight"] == 100 || j > 50){
+        if(min_node["weight"] == 100 || j > 10){
             console.log("no path " + j)
             return
         }
