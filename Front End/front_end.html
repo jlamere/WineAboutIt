@@ -18,6 +18,10 @@
         width:100%;
         color: white;
     }
+    .dropdown{
+        margin: 20px !important;
+    }
+
     </style>
 </head>
 
@@ -31,20 +35,22 @@
             </div>
         </div>
     </div>
-
-    <div class="ui two column centered grid " id = "selector">
-        <div class = "row"></div>
-        <div class="seven column centered row">
-            <div class="column">
-                <div class="ui floating dropdown labeled search icon button center" id="favWine">
+    <div class="ui page grid">
+        <div class="two column row">
+            <div class="column"> 
+                <div class="row">
+                    <div class="ui floating dropdown labeled search icon button center right floated" id="favWine">
                     <i class="heart icon"></i>
                     <span class="text">Select your favorite wine</span>
+                    </div>
                 </div>
             </div>
             <div class="column">
-                <div class="ui floating dropdown labeled search icon button center" id="newWine">
-                    <i class="empty heart icon"></i>
-                    <span class="text">Wine you want to like </span>
+                <div class="row">                 
+                    <div class="ui floating dropdown labeled search icon button center" id="newWine">
+                        <i class="empty heart icon"></i>
+                        <span class="text">Wine you want to like </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +68,7 @@
 
 <div id ="footer">
 <center>
-By Jen Lamere
+Jen Lamere 2016
 </center>
 </div>
 
