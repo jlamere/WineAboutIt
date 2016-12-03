@@ -10,7 +10,14 @@
         height: 30%;
         background-color: #502127 !important;
     }
-    
+    #footer{
+        background-color: #502127;
+        height: 4%;
+        position: fixed;
+        bottom:0px;
+        width:100%;
+        color: white;
+    }
     </style>
 </head>
 
@@ -48,18 +55,35 @@
         </div>
     </div>
     <div class="ui one column stackable center aligned page grid">
-        <div class="column twelve wide">
+        <div class="column wide">
             <div class = "wine_list"></div>
         </div>
     </div>
 
+<div id ="footer">
+<center>
+By Jen Lamere
+</center>
+</div>
+
+
 <script src="./graphlib.min.js"></script>
 <script src="./jquery-3.1.1.min.js"></script>
 <script src="./similarity.js"></script>
+<script src="./prototypes.js"></script>
 <link rel="stylesheet" type="text/css" href="./semantic.min.css">
 <script src="./semantic.min.js"></script>
 <script>
-
+    wine_prototypes_array = prototypes.split(';');
+    wine_prototypes = {}
+    for(var i = 0; i < wine_prototypes_array.length; i++){
+        splitVals = wine_prototypes_array[i].split(',')
+        wine_prototypes[splitVals[0]] = {
+            "Attributes" : splitVals[1],
+            "Type" : splitVals[2]
+        }
+    }
+    console.log(wine_prototypes)
     wine = {}
     wine_names = []
     dijkstra = {}
@@ -196,7 +220,7 @@
     }
 
     function build_header(wine_name){
-      return '<div class="step"><i class="cocktail icon"></i><div class="content"><div class="title">' + wine_name + '</div><div class="description">Wine details here</div></div></div>'
+      return '<div class="step"><i class="cocktail icon"></i><div class="content"><div class="title">' + wine_name + '</div><div class="description">' + wine_prototypes[wine_name]["Type"] + "<h6>" +wine_prototypes[wine_name]["Attributes"] + '</h6></div></div></div>'
       
     }
 </script>
