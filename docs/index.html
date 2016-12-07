@@ -168,7 +168,12 @@
             if(!n[name]){
                 n[name] = {};
             }
+            if(!n[wineTwo]){
+                n[wineTwo] = {};
+            }
             n[name][wineTwo] = weight;
+            n[wineTwo][name] = weight;
+
         }
 
         this.dijkastra = function(startWine, endWine){
@@ -176,7 +181,6 @@
             var distances = {};
             var parent = {};
             var path = [];
-
             for(node in n){
                 if(node == startWine){
                     distances[startWine] = 0;
@@ -192,6 +196,7 @@
             }
             while(!priorityQueue.isEmpty()){
                 smallest = priorityQueue.removeNode();
+                console.log(smallest)
                 if(!smallest || distances[smallest] === INFINITY){
                     continue;
                 }

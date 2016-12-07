@@ -27,6 +27,20 @@ def make_vector(wine):
         vector[attributes.index(key)] = float(value)/float(wine["Count"])
     return vector
 
+def wine_type_similarity(wine1, wine2):
+
+    if(wine1 == wine2):
+        return 1
+    elif(wine1 == "Red Wines" and wine2 == u"Ros\xe9 Wine" or wine2 == "Red Wines" and wine1 == u"Ros\xe9 Wine"):
+        return 0.5
+    elif(wine1 == "White Wines" and wine2 == u"Ros\xe9 Wine" or wine2 == "White Wines" and wine1 == u"Ros\xe9 Wine"):
+        return 0.5
+    elif(wine1 == "White Wines" and wine2 == "Champagne & Sparkling" or wine2 == "White Wines" and wine1 == "Champagne & Sparkling"):
+        return 0.5
+    elif(wine1 == "Red Wines" and wine2 == "White Wines" or wine2 == "White Wines" and wine1 == "Red Wines"):
+        return 0.25
+    else: return 0
+
 # read in data file
 with open(datafile, 'rb') as f:
     reader = csv.reader(f)
@@ -54,7 +68,7 @@ with open(datafile, 'rb') as f:
             sumation = math.sqrt(sumation)
 
             # factor in if they are the same type of wine (red, white, etc)
-            similarity = 1 if  data1["WineType"].keys() == data2["WineType"].keys() else 0
+            similarity = wine_type_similarity(data1["WineType"].keys()[0], data2["WineType"].keys()[0])
             similarity = (sumation + similarity) / 2
             writer.writerow([wine1 + "," + wine2 + "," + str(similarity)])
 
