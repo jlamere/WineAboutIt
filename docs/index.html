@@ -114,10 +114,7 @@
         dropdownHTML += '<div class="item" data-value="' + wine_names[w] + '">' + wine_names[w] + '</div>'
     }
 
-    initial_wine = null
-    start_wine = null
-    final_wine =  null
-
+    var initial_wine, start_wine, final_wine;
     $('#favWine .menu').html(dropdownHTML);
     $('#favWine').dropdown({
          onChange: function(val) {
@@ -142,30 +139,31 @@
             $("#favWine").addClass('error');
         }
         else if (initial_wine && final_wine){
-            $("#favWine").removeClass('error');
-            $("#newWine").removeClass('error');
-            $("#button").addClass('loading');
-            $(".wine_list").empty();
-            path = graph.dijkastra(start_wine, final_wine);
-
-            var html = "";
-            if(path.length ==0){
-                $( ".wine_list" ).prepend('No path found');
-            }
-            else{
-                for(html_item in path){
-                    html += build_header(path[html_item]);
-                }    
-                $( ".wine_list" ).prepend('<div class="ui flex stackable steps">' + html);
-            }
-            $("#button").removeClass('loading');            
-
-
+          newWineSearch();
         }
     })
 
+    function newWineSearch(){
+        $("#favWine").removeClass('error');
+        $("#newWine").removeClass('error');
+        $("#button").addClass('loading');
+        $(".wine_list").empty();
+        path = graph.dijkastra(start_wine, final_wine);
+
+        var html = "";
+        if(path.length ==0){
+            $( ".wine_list" ).prepend('No path found');
+        }
+        else{
+            for(html_item in path){
+                html += buildHeader(path[html_item]);
+            }    
+            $( ".wine_list" ).prepend('<div class="ui flex stackable steps">' + html);
+        }
+        $("#button").removeClass('loading');  
+    }
     
-    function build_header(wine_name){
+    function buildHeader(wine_name){
       return '<div class="step"><i class="cocktail icon"></i><div class="content"><div class="title">' + wine_name + '</div><div class="description">' + wine_prototypes[wine_name]["Type"] + "<h6>" +wine_prototypes[wine_name]["Attributes"] + '</h6></div></div></div>'
       
     }
