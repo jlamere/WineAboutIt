@@ -4,10 +4,9 @@
 
   <title>Wine About It</title>
   <meta name="author" content="Jen Lamere">
-
+    <link rel="stylesheet" type="text/css" href="./semantic.min.css">
     <style type="text/css">
     .masthead   {
-        height: 30%;
         background-color: #502127 !important;
     }
     #footer{
@@ -21,6 +20,12 @@
     .dropdown{
         margin: 20px !important;
     }
+    a{
+        color:white;
+    }
+    a:hover {
+    color: grey;
+    }   
 
     </style>
 </head>
@@ -31,7 +36,8 @@
             <div class="ui text container">
                 <h1 class = "ui inverted header"> <i class="circular cocktail icon"></i></h1>
                 <h1 class="ui inverted header">Wine.About.It </h1>
-                <h3>Get yourself to drink better wine</h3>
+                <h3>Wish you drank more sophisticated wine?</h3>
+                Enter your favorite wine, and a wine you wished you enjoyed, and Wine About It will give you the intemediary wines you should try to warm up to a new wine.
             </div>
         </div>
     </div>
@@ -60,13 +66,17 @@
             <button class="ui secondary basic button" id = "button">Find my wine!</button>
         </div>
     </div>
-    <div class="ui one column stackable center aligned page grid">
+    <div class = "grid">
+        <center>
             <div class = "wine_list"></div>
+        </center>
     </div>
 
 <div id ="footer">
 <center>
- Jen Lamere 2016
+<a href="https://medium.com/@imjen/wine-about-it-building-recommendations-for-wine-2a72ffbd7c0c#.r7t7ot3fy" text-color="white"> Read How it Works </a>
+<br>
+ by Jen Lamere 2016
 </center>
 </div>
 
@@ -75,7 +85,6 @@
 <script src="./jquery-3.1.1.min.js"></script>
 <script src="./similarity.js"></script>
 <script src="./prototypes.js"></script>
-<link rel="stylesheet" type="text/css" href="./semantic.min.css">
 <script src="./semantic.min.js"></script>
 <script>
     wine_prototypes_array = prototypes.split(';');
@@ -146,7 +155,7 @@
                 for(html_item in path){
                     html += build_header(path[html_item]);
                 }    
-                $( ".wine_list" ).prepend('<div class="ui vertical steps">' + html);
+                $( ".wine_list" ).prepend('<div class="ui flex stackable steps">' + html);
             }
             $("#button").removeClass('loading');            
 
@@ -174,8 +183,8 @@
             if(!n[wineTwo]){
                 n[wineTwo] = {};
             }
-            n[name][wineTwo] = weight;
-            n[wineTwo][name] = weight;
+            n[name][wineTwo] = 1-weight;
+            n[wineTwo][name] = 1-weight;
 
         }
 
@@ -199,7 +208,6 @@
             }
             while(!priorityQueue.isEmpty()){
                 smallest = priorityQueue.removeNode();
-                console.log(smallest)
                 if(!smallest || distances[smallest] === INFINITY){
                     continue;
                 }
