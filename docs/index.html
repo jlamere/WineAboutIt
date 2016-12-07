@@ -61,9 +61,7 @@
         </div>
     </div>
     <div class="ui one column stackable center aligned page grid">
-        <div class="column wide">
             <div class = "wine_list"></div>
-        </div>
     </div>
 
 <div id ="footer">
@@ -137,14 +135,19 @@
             $("#favWine").removeClass('error');
             $("#newWine").removeClass('error');
             $("#button").addClass('loading');
-
+            $(".wine_list").empty();
             path = graph.dijkastra(start_wine, final_wine);
 
             var html = "";
-            for(html_item in path){
-                html += build_header(path[html_item]);
+            if(path.length ==0){
+                $( ".wine_list" ).prepend('No path found');
             }
-            $( ".wine_list" ).prepend('<div class="ui steps">' + html);
+            else{
+                for(html_item in path){
+                    html += build_header(path[html_item]);
+                }    
+                $( ".wine_list" ).prepend('<div class="ui vertical steps">' + html);
+            }
             $("#button").removeClass('loading');            
 
 
@@ -205,6 +208,7 @@
                         path.push(smallest);
                         smallest = parent[smallest];
                     }
+
                     path.push(startWine)
                     return path.reverse();
                 }
