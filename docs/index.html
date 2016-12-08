@@ -158,8 +158,7 @@
             for(html_item in path){
                 html += buildHeader(path[html_item]);
             }    
-            isVertical = path.length > 6 ? "vertical" : "stackable"
-            openingDiv = '<div class="ui flex ' + isVertical + ' steps">'
+            openingDiv = '<div class="ui vertical steps">'
             $( ".wine_list" ).prepend(openingDiv + html);
         }
         $("#button").removeClass('loading');  
